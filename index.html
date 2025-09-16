@@ -1,0 +1,1782 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Empatheia - Diario Globale Contro il Bullismo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-gold: #d4af37;
+            --secondary-gold: #f4e4bc;
+            --dark-blue: #1e3a8a;
+            --cream: #f5f5dc;
+            --dark-bg: #0a0a0a;
+            --darker-bg: #1a1a1a;
+            --card-bg: #2d2d2d;
+            --text-light: #f5f5f5;
+            --text-muted: #cccccc;
+            --success-green: #10b981;
+            --love-red: #ef4444;
+            --hope-blue: #3b82f6;
+            --gradient-primary: linear-gradient(135deg, #d4af37 0%, #f4e4bc 100%);
+            --gradient-dark: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #2d2d2d 100%);
+            --gradient-hero: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 30%, #2d2d2d 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--gradient-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: var(--gradient-dark);
+        }
+
+        .animated-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 80%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(30, 58, 138, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 40%, rgba(245, 245, 220, 0.05) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(1deg); }
+            66% { transform: translateY(10px) rotate(-1deg); }
+        }
+
+        /* Header */
+        header {
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        header.scrolled {
+            background: rgba(10, 10, 10, 0.98);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            cursor: pointer;
+        }
+
+        .logo-image {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            transition: all 0.3s ease;
+            border-radius: 50%;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .logo-image:hover {
+            transform: scale(1.1) rotate(2deg);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
+        }
+
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-light);
+            letter-spacing: 3px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover .logo-text {
+            transform: scale(1.05);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            transition: all 0.3s ease;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-gold);
+            transform: translateY(-2px);
+        }
+
+        .cta-button {
+            background: var(--gradient-primary);
+            color: var(--dark-bg);
+            padding: 12px 28px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            display: none;
+        }
+
+        .mobile-menu-btn {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-btn:hover {
+            color: var(--primary-gold);
+        }
+
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 280px;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            padding: 80px 2rem 2rem;
+            transition: right 0.3s ease;
+            z-index: 1001;
+            border-left: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .mobile-nav.active {
+            right: 0;
+        }
+
+        .mobile-nav a {
+            display: block;
+            color: var(--text-light);
+            text-decoration: none;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-nav a:hover {
+            color: var(--primary-gold);
+            padding-left: 1rem;
+        }
+
+        .mobile-cta-btn {
+            background: var(--gradient-primary);
+            color: var(--dark-bg) !important;
+            border-radius: 25px;
+            text-align: center;
+            margin-top: 2rem;
+            border: none !important;
+            padding: 1rem !important;
+            font-weight: 600;
+        }
+
+        .mobile-nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-nav-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 140px 0 100px;
+            text-align: center;
+            background: var(--gradient-hero);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="0.5" fill="%23d4af37" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 1s ease-out;
+            text-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 1s ease-out 0.2s both;
+            line-height: 1.8;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease-out 0.4s both;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: var(--dark-bg);
+            padding: 18px 36px;
+            border-radius: 35px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(212, 175, 55, 0.5);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-light);
+            padding: 18px 36px;
+            border: 2px solid var(--primary-gold);
+            border-radius: 35px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-secondary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: var(--gradient-primary);
+            transition: width 0.3s ease;
+            z-index: -1;
+        }
+
+        .btn-secondary:hover::before {
+            width: 100%;
+        }
+
+        .btn-secondary:hover {
+            color: var(--dark-bg);
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(212, 175, 55, 0.3);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 0;
+            background: var(--card-bg);
+            position: relative;
+        }
+
+        .features::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 49%, rgba(212, 175, 55, 0.05) 50%, transparent 51%);
+            background-size: 20px 20px;
+        }
+
+        .features h2 {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 4rem;
+            color: var(--text-light);
+            position: relative;
+        }
+
+        .features h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .feature-card {
+            background: rgba(245, 245, 245, 0.03);
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .feature-card:hover::before {
+            opacity: 0.05;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-gold);
+            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.2);
+        }
+
+        .feature-icon {
+            width: 100px;
+            height: 100px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            font-size: 2.5rem;
+            color: var(--dark-bg);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-icon::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .feature-card:hover .feature-icon::before {
+            animation: shine 0.6s ease;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .feature-card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            line-height: 1.7;
+            font-size: 1.05rem;
+        }
+
+        /* Diary Section Enhanced */
+        .diary {
+            padding: 100px 0;
+            background: var(--darker-bg);
+            position: relative;
+        }
+
+        .diary h2 {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 4rem;
+            color: var(--text-light);
+            position: relative;
+        }
+
+        .diary h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+        }
+
+        .diary-form {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(245, 245, 245, 0.03);
+            padding: 4rem;
+            border-radius: 25px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .diary-form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.05) 0%, transparent 50%, rgba(30, 58, 138, 0.05) 100%);
+            z-index: -1;
+        }
+
+        .form-group {
+            margin-bottom: 2.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 1rem;
+            color: var(--text-light);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 20px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 15px;
+            background: rgba(245, 245, 245, 0.05);
+            color: var(--text-light);
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-gold);
+            background: rgba(245, 245, 245, 0.08);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+        }
+
+        .form-group textarea {
+            min-height: 250px;
+            resize: vertical;
+        }
+
+        .form-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-checkbox input[type="checkbox"] {
+            width: auto;
+            accent-color: var(--primary-gold);
+        }
+
+        .submit-btn {
+            background: var(--gradient-primary);
+            color: var(--dark-bg);
+            padding: 20px 50px;
+            border: none;
+            border-radius: 35px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.5);
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            padding: 40px 0 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 20%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 80%, rgba(30, 58, 138, 0.05) 0%, transparent 50%);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 3rem;
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .footer-links {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .footer-brand {
+            max-width: 100%;
+            text-align: center;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-logo-image {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            border-radius: 50%;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+        }
+
+        .footer-brand h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--primary-gold);
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+        }
+
+        .footer-brand p {
+            color: var(--text-muted);
+            line-height: 1.7;
+            font-size: 1.05rem;
+        }
+
+        .footer-section h4 {
+            color: var(--primary-gold);
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-section a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary-gold);
+        }
+
+        .footer-social {
+            margin-top: 2rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .social-link:hover {
+            background: var(--primary-gold);
+            color: var(--dark-bg);
+            transform: translateY(-2px);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            padding-top: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 1.5rem;
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .footer-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .footer-copyright p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        /* Success message */
+        .success-message {
+            background: var(--success-green);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            text-align: center;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideDown 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Loading animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(212, 175, 55, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-gold);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links,
+            .cta-button {
+                display: none;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .container {
+                padding: 0 15px;
+            }
+
+            .hero {
+                padding: 120px 0 80px;
+            }
+
+            .hero h1 {
+                font-size: 3rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .diary-form {
+                padding: 2.5rem 1.5rem;
+            }
+
+            .features h2,
+            .diary h2 {
+                font-size: 2.5rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+                text-align: center;
+            }
+
+            .footer-links {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .footer-brand {
+                max-width: 100%;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+                gap: 1.5rem;
+            }
+
+            .footer-stats {
+                justify-content: center;
+                gap: 1.5rem;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+
+            .logo {
+                gap: 1rem;
+            }
+
+            .logo-image {
+                width: 50px;
+                height: 50px;
+            }
+
+            .logo-text {
+                font-size: 1.6rem;
+            }
+        }
+
+        /* About Section Styles */
+        .about-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, var(--darker-bg) 0%, var(--card-bg) 50%, var(--darker-bg) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.08) 0%, transparent 60%),
+                        radial-gradient(circle at 80% 70%, rgba(30, 58, 138, 0.08) 0%, transparent 60%);
+            z-index: 1;
+        }
+
+        .about-hero {
+            text-align: center;
+            margin-bottom: 6rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .about-hero h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .about-subtitle {
+            font-size: 1.4rem;
+            color: var(--text-muted);
+            font-style: italic;
+            margin-bottom: 0;
+        }
+
+        .about-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .about-main {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 6rem;
+            align-items: start;
+        }
+
+        .about-text {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        .about-intro,
+        .about-mission {
+            background: rgba(245, 245, 245, 0.03);
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-intro::before,
+        .about-mission::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.05) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .about-intro h3,
+        .about-mission h3 {
+            font-size: 1.6rem;
+            color: var(--primary-gold);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .about-intro p,
+        .about-mission p {
+            color: var(--text-light);
+            line-height: 1.8;
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        .about-intro strong {
+            color: var(--primary-gold);
+            font-weight: 600;
+        }
+
+        .about-visual {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .about-card {
+            background: rgba(245, 245, 245, 0.03);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            text-align: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .about-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-gold);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.2);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .about-card h4 {
+            color: var(--text-light);
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+        }
+
+        .about-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+
+
+        .about-impact {
+            background: rgba(245, 245, 245, 0.03);
+            padding: 4rem;
+            border-radius: 25px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            text-align: center;
+            margin-bottom: 4rem;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-impact::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.05) 0%, transparent 50%, rgba(30, 58, 138, 0.05) 100%);
+            z-index: -1;
+        }
+
+        .impact-content h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: var(--primary-gold);
+            margin-bottom: 2rem;
+        }
+
+        .impact-content p {
+            color: var(--text-light);
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 3rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .impact-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .stat-highlight {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-gold);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .about-cta {
+            text-align: center;
+            background: rgba(245, 245, 245, 0.03);
+            padding: 4rem;
+            border-radius: 25px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(212, 175, 55, 0.08) 0%, transparent 70%);
+            z-index: -1;
+        }
+
+        .cta-content h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta-content p {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Responsive About Section */
+        @media (max-width: 768px) {
+            .about-hero h2 {
+                font-size: 2.5rem;
+            }
+
+            .about-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .about-main {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+                margin-bottom: 4rem;
+            }
+
+            .about-text {
+                gap: 2rem;
+            }
+
+            .about-intro,
+            .about-mission {
+                padding: 2rem;
+            }
+
+            .about-visual {
+                order: -1;
+            }
+
+            .about-impact,
+            .about-cta {
+                padding: 2.5rem 2rem;
+            }
+
+            .impact-stats {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .cta-content h3 {
+                font-size: 1.8rem;
+            }
+
+            .cta-content p {
+                font-size: 1.1rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+        }
+
+        /* Scroll animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg"></div>
+
+    <!-- Header -->
+    <header id="header">
+        <nav class="container">
+            <div class="logo" onclick="scrollToTop()">
+                <img src="logo.jpg" alt="Empatheia Logo" class="logo-image">
+                <div class="logo-text">EMPATHEIA</div>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="diary-page.html">Diario</a></li>
+                <li><a href="#about">Chi Siamo</a></li>
+                <li><a href="#contact">Contatti</a></li>
+            </ul>
+            <div class="mobile-menu">
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="mobile-nav">
+                    <a href="#home" onclick="closeMobileMenu()">Home</a>
+                    <a href="diary-page.html">Diario</a>
+                    <a href="#about" onclick="closeMobileMenu()">Chi Siamo</a>
+                    <a href="#contact" onclick="closeMobileMenu()">Contatti</a>
+                    <a href="#diary" class="mobile-cta-btn" onclick="closeMobileMenu()">
+                        <i class="fas fa-pen-fancy"></i> Scrivi Ora
+                    </a>
+                </div>
+            </div>
+            <a href="#diary" class="cta-button">Scrivi Ora</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Come stai oggi?</h1>
+                <p>Un diario globale anonimo dove i ragazzi possono esprimere le proprie emozioni e trovare supporto contro il bullismo. Insieme, creiamo un mondo più empatico e comprensivo.</p>
+                <div class="hero-buttons">
+                    <a href="#diary" class="btn-primary">
+                        <i class="fas fa-pen-fancy"></i> Inizia a Scrivere
+                    </a>
+                    <a href="#about" class="btn-secondary">
+                        <i class="fas fa-heart"></i> Scopri di Più
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2 class="fade-in">Perché Scegliere Empatheia?</h2>
+            <div class="features-grid">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Completamente Anonimo</h3>
+                    <p>Le tue emozioni sono al sicuro. Non raccogliamo dati personali e garantiamo la massima privacy e sicurezza per tutti i tuoi pensieri.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">🌍</div>
+                    <h3>Comunità Globale</h3>
+                    <p>Connettiti con ragazzi di tutto il mondo che stanno vivendo esperienze simili alle tue. Non sei mai solo.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">💝</div>
+                    <h3>Supporto Emotivo</h3>
+                    <p>Trova conforto e comprensione in una comunità che ti accoglie senza giudizi. Qui le tue emozioni sono valide.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">📝</div>
+                    <h3>Diario Personale</h3>
+                    <p>Esprimi liberamente i tuoi pensieri e sentimenti in un ambiente sicuro e protetto, progettato per la tua crescita personale.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Diary Section -->
+    <section id="diary" class="diary">
+        <div class="container">
+            <h2 class="fade-in">Il Tuo Diario Personale</h2>
+            
+            <div class="diary-form fade-in">
+                <div id="successMessage" class="success-message">
+                    <i class="fas fa-check-circle"></i> La tua storia è stata pubblicata nel diario globale! Ti stiamo reindirizzando per vedere tutte le storie...
+                </div>
+                
+                <form id="diaryForm">
+                    <div class="form-group">
+                        <label for="authorName">
+                            <i class="fas fa-user"></i> Come vuoi essere chiamato?
+                        </label>
+                        <input type="text" id="authorName" name="authorName" placeholder="Inserisci un nickname o lascia vuoto per rimanere anonimo">
+                    </div>
+                    <div class="form-group">
+                        <label for="emotion">
+                            <i class="fas fa-heart"></i> Come ti senti oggi?
+                        </label>
+                        <input type="text" id="emotion" name="emotion" placeholder="Es. Triste, arrabbiato, confuso, speranzoso, grato, ansioso..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="entry">
+                            <i class="fas fa-book-open"></i> Racconta la tua storia
+                        </label>
+                        <textarea id="entry" name="entry" placeholder="Scrivi qui i tuoi pensieri, le tue emozioni, quello che ti è successo. Ricorda: sei al sicuro, nessuno ti giudicherà. Questo è il tuo spazio per essere te stesso e aiutare altri che potrebbero vivere situazioni simili." required></textarea>
+                    </div>
+                    <div class="form-checkbox">
+                        <input type="checkbox" id="allowContact" name="allowContact">
+                        <label for="allowContact">Permetti ad altri utenti di contattarti per offrirti supporto</label>
+                    </div>
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-share"></i> Pubblica nel Diario Globale
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <div class="about-hero">
+                <h2 class="fade-in">Chi Siamo</h2>
+                <p class="about-subtitle fade-in">La missione che ci unisce</p>
+            </div>
+            
+            <div class="about-content">
+                <div class="about-main fade-in">
+                    <div class="about-text">
+                        <div class="about-intro">
+                            <h3>🌟 La Nostra Storia</h3>
+                            <p>
+                                Empatheia nasce dall'idea che <strong>ogni voce abbia valore</strong> e che la condivisione 
+                                delle esperienze possa trasformare il dolore in forza, l'isolamento in connessione. 
+                                Siamo più di una piattaforma: siamo una famiglia digitale dove ogni giovane può trovare 
+                                il suo posto sicuro.
+                            </p>
+                        </div>
+                        
+                        <div class="about-mission">
+                            <h3>💝 La Nostra Missione</h3>
+                            <p>
+                                Creare uno spazio dove il bullismo non ha potere, dove le differenze sono celebrate 
+                                e dove ogni ragazzo può crescere con fiducia. Empatheia è il ponte tra il dolore 
+                                e la guarigione, tra la solitudine e l'appartenenza.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="about-visual">
+                        <div class="about-card">
+                            <div class="card-icon">🤝</div>
+                            <h4>Supporto 24/7</h4>
+                            <p>Una comunità sempre presente per ascoltarti</p>
+                        </div>
+                        <div class="about-card">
+                            <div class="card-icon">🔒</div>
+                            <h4>100% Anonimo</h4>
+                            <p>La tua privacy è la nostra priorità assoluta</p>
+                        </div>
+                        <div class="about-card">
+                            <div class="card-icon">🌈</div>
+                            <h4>Diversità</h4>
+                            <p>Celebriamo ogni identità e ogni storia</p>
+                        </div>
+                    </div>
+                </div>
+                
+
+                
+                <div class="about-impact fade-in">
+                    <div class="impact-content">
+                        <h3>Il Nostro Impatto</h3>
+                        <p>
+                            Ogni storia condivisa è un passo verso un mondo migliore. 
+                            Ogni reazione di supporto è un abbraccio virtuale che scalda il cuore. 
+                            Ogni giovane che trova il coraggio di parlare è una vittoria che celebriamo insieme.
+                        </p>
+                        <div class="impact-stats">
+                            <div class="stat-highlight">
+                                <span class="stat-number">1,200+</span>
+                                <span class="stat-label">Storie di Coraggio</span>
+                            </div>
+                            <div class="stat-highlight">
+                                <span class="stat-number">15K+</span>
+                                <span class="stat-label">Gesti di Supporto</span>
+                            </div>
+                            <div class="stat-highlight">
+                                <span class="stat-number">89</span>
+                                <span class="stat-label">Nuove Amicizie</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="about-cta fade-in">
+                    <div class="cta-content">
+                        <h3>Unisciti alla Famiglia Empatheia</h3>
+                        <p>
+                            Non sei solo. Non sei sbagliato. Non sei l'unico. 
+                            Qui troverai la tua voce, il tuo posto, la tua famiglia digitale.
+                        </p>
+                        <div class="cta-buttons">
+                            <a href="#diary" class="btn-primary">
+                                <i class="fas fa-heart"></i> Condividi la Tua Storia
+                            </a>
+                            <a href="diary-page.html" class="btn-secondary">
+                                <i class="fas fa-book-reader"></i> Leggi le Esperienze
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <img src="logo.jpg" alt="Empatheia Logo" class="footer-logo-image">
+                        <h3>EMPATHEIA</h3>
+                    </div>
+                    <p>Un diario globale anonimo contro il bullismo. Insieme, creiamo un mondo più empatico dove ogni voce conta.</p>
+                    
+                    <div class="footer-social">
+                        <div class="social-links">
+                            <a href="#" class="social-link" title="Instagram">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" class="social-link" title="TikTok">
+                                <i class="fab fa-tiktok"></i>
+                            </a>
+                            <a href="#" class="social-link" title="YouTube">
+                                <i class="fab fa-youtube"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer-links">
+                    <div class="footer-section">
+                        <h4>Naviga</h4>
+                        <ul>
+                            <li><a href="#diary">Scrivi nel Diario</a></li>
+                            <li><a href="diary-page.html">Leggi le Storie</a></li>
+                            <li><a href="#about">Chi Siamo</a></li>
+                            <li><a href="#contact">Supporto</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-section">
+                        <h4>Aiuto</h4>
+                        <ul>
+                            <li><a href="tel:19696">Telefono Azzurro: 19696</a></li>
+                            <li><a href="tel:112">Emergenza: 112</a></li>
+                            <li><a href="#contact">Contatti</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-stats">
+                    <span class="stat">1,200+ storie</span>
+                    <span class="stat">15K+ reazioni</span>
+                    <span class="stat">100% anonimo</span>
+                </div>
+                <div class="footer-copyright">
+                    <p>&copy; 2024 Empatheia • Creato per aiutare i giovani</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-nav-overlay" onclick="closeMobileMenu()"></div>
+
+    <script>
+        // Get or create current user ID
+        function getCurrentUserId() {
+            let userId = localStorage.getItem('empatheiaUserId');
+            if (!userId) {
+                userId = "user" + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('empatheiaUserId', userId);
+            }
+            return userId;
+        }
+
+        const currentUserId = getCurrentUserId();
+
+        // Load existing stories from localStorage
+        function loadStoriesFromStorage() {
+            const savedStories = localStorage.getItem('empatheiaStories');
+            if (savedStories) {
+                return JSON.parse(savedStories);
+            }
+            return []; // Return empty array if none saved
+        }
+
+        // Save stories to localStorage
+        function saveStoriesToStorage(storiesData) {
+            localStorage.setItem('empatheiaStories', JSON.stringify(storiesData));
+        }
+
+        // Diary form submission
+        document.getElementById('diaryForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const authorName = document.getElementById('authorName').value.trim() || 'Anonimo';
+            const emotion = document.getElementById('emotion').value;
+            const entry = document.getElementById('entry').value;
+            const allowContact = document.getElementById('allowContact').checked;
+            const submitBtn = document.querySelector('.submit-btn');
+            
+            if (emotion && entry) {
+                // Show loading animation
+                submitBtn.innerHTML = '<div class="loading"></div> Pubblicando nel diario...';
+                submitBtn.disabled = true;
+                
+                // Simulate saving to diary
+                setTimeout(() => {
+                    // Create new story
+                    const newStory = {
+                        id: Date.now(),
+                        emotion: emotion,
+                        content: entry,
+                        date: "Ora",
+                        reactions: { love: 0, support: 0, hope: 0 },
+                        allowContact: allowContact,
+                        author: currentUserId,
+                        authorName: authorName
+                    };
+                    
+                    // Load current stories from storage
+                    const currentStories = loadStoriesFromStorage();
+                    currentStories.unshift(newStory);
+                    
+                    // Save updated stories to storage
+                    saveStoriesToStorage(currentStories);
+                    
+                    // Show success message
+                    document.getElementById('successMessage').classList.add('show');
+                    setTimeout(() => {
+                        document.getElementById('successMessage').classList.remove('show');
+                    }, 3000);
+                    
+                    // Reset form and button
+                    document.getElementById('diaryForm').reset();
+                    submitBtn.innerHTML = '<i class="fas fa-share"></i> Pubblica nel Diario Globale';
+                    submitBtn.disabled = false;
+                    
+                    // Redirect to diary page after a short delay
+                    setTimeout(() => {
+                        window.location.href = 'diary-page.html';
+                    }, 2000);
+                }, 2000);
+            }
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Add interactive effects to cards
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Scroll to top function
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Mobile Menu Functions
+        function toggleMobileMenu() {
+            const mobileNav = document.querySelector('.mobile-nav');
+            const overlay = document.querySelector('.mobile-nav-overlay');
+            
+            mobileNav.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        function closeMobileMenu() {
+            const mobileNav = document.querySelector('.mobile-nav');
+            const overlay = document.querySelector('.mobile-nav-overlay');
+            
+            mobileNav.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+
+        // Close mobile menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.querySelector('.mobile-nav').classList.contains('active')) {
+                closeMobileMenu();
+            }
+        });
+    </script>
+</body>
+</html>
