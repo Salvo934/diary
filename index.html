@@ -1672,11 +1672,13 @@
                 // Simulate saving to diary
                 setTimeout(() => {
                     // Create new story
+                    const now = new Date();
                     const newStory = {
                         id: Date.now(),
                         emotion: emotion,
                         content: entry,
                         date: "Ora",
+                        timestamp: now.toISOString(),
                         reactions: { love: 0, support: 0, hope: 0 },
                         allowContact: allowContact,
                         author: currentUserId,
