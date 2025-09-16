@@ -218,6 +218,9 @@
             cursor: pointer;
             padding: 0.5rem;
             transition: all 0.3s ease;
+            z-index: 1002;
+            position: relative;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .mobile-menu-btn:hover {
@@ -236,6 +239,7 @@
             transition: right 0.3s ease;
             z-index: 1001;
             border-left: 1px solid rgba(212, 175, 55, 0.2);
+            overflow-y: auto;
         }
 
         .mobile-nav.active {
@@ -899,6 +903,15 @@
 
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+
+        /* Mobile Menu Debug Styles */
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block !important;
+                visibility: visible !important;
+                pointer-events: auto !important;
+            }
         }
 
         /* Responsive */
@@ -1756,25 +1769,75 @@
 
         // Mobile Menu Functions
         function toggleMobileMenu() {
+            console.log('toggleMobileMenu called'); // Debug log
             const mobileNav = document.querySelector('.mobile-nav');
             const overlay = document.querySelector('.mobile-nav-overlay');
             
-            mobileNav.classList.toggle('active');
-            overlay.classList.toggle('active');
+            if (mobileNav && overlay) {
+                mobileNav.classList.toggle('active');
+                overlay.classList.toggle('active');
+                
+                // Prevent body scroll when menu is open
+                if (mobileNav.classList.contains('active')) {
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    document.body.style.overflow = '';
+                }
+            } else {
+                console.error('Mobile nav elements not found');
+            }
         }
 
         function closeMobileMenu() {
+            console.log('closeMobileMenu called'); // Debug log
             const mobileNav = document.querySelector('.mobile-nav');
             const overlay = document.querySelector('.mobile-nav-overlay');
             
-            mobileNav.classList.remove('active');
-            overlay.classList.remove('active');
+            if (mobileNav && overlay) {
+                mobileNav.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
         }
 
         // Close mobile menu on escape key
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && document.querySelector('.mobile-nav').classList.contains('active')) {
-                closeMobileMenu();
+            if (e.key === 'Escape') {
+                const mobileNav = document.querySelector('.mobile-nav');
+                if (mobileNav && mobileNav.classList.contains('active')) {
+                    closeMobileMenu();
+                }
+            }
+        });
+
+        // Initialize mobile menu when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing mobile menu');
+            
+            // Test if elements exist
+            const mobileBtn = document.querySelector('.mobile-menu-btn');
+            const mobileNav = document.querySelector('.mobile-nav');
+            const overlay = document.querySelector('.mobile-nav-overlay');
+            
+            console.log('Mobile button:', mobileBtn);
+            console.log('Mobile nav:', mobileNav);
+            console.log('Overlay:', overlay);
+            
+            // Add click event listener as fallback
+            if (mobileBtn) {
+                mobileBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('Mobile button clicked');
+                    toggleMobileMenu();
+                });
+            }
+            
+            // Add overlay click listener
+            if (overlay) {
+                overlay.addEventListener('click', function() {
+                    console.log('Overlay clicked');
+                    closeMobileMenu();
+                });
             }
         });
     </script>
