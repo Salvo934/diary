@@ -230,16 +230,17 @@
         .mobile-nav {
             position: fixed;
             top: 0;
-            right: -100%;
+            right: -300px;
             width: 280px;
             height: 100vh;
             background: rgba(10, 10, 10, 0.98);
             backdrop-filter: blur(20px);
             padding: 80px 2rem 2rem;
-            transition: right 0.3s ease;
+            transition: right 0.3s ease-in-out;
             z-index: 1001;
             border-left: 1px solid rgba(212, 175, 55, 0.2);
             overflow-y: auto;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
         }
 
         .mobile-nav.active {
@@ -1360,15 +1361,6 @@
                 <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
                     <i class="fas fa-bars"></i>
                 </button>
-                <div class="mobile-nav">
-                    <a href="#home" onclick="closeMobileMenu()">Home</a>
-                    <a href="diary-page.html">Diario</a>
-                    <a href="#about" onclick="closeMobileMenu()">Chi Siamo</a>
-                    <a href="#contact" onclick="closeMobileMenu()">Contatti</a>
-                    <a href="#diary" class="mobile-cta-btn" onclick="closeMobileMenu()">
-                        <i class="fas fa-pen-fancy"></i> Scrivi Ora
-                    </a>
-                </div>
             </div>
             <a href="#diary" class="cta-button">Scrivi Ora</a>
         </nav>
@@ -1621,6 +1613,17 @@
         </div>
     </footer>
 
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav">
+        <a href="#home" onclick="closeMobileMenu()">Home</a>
+        <a href="diary-page.html" onclick="closeMobileMenu()">Diario</a>
+        <a href="#about" onclick="closeMobileMenu()">Chi Siamo</a>
+        <a href="#contact" onclick="closeMobileMenu()">Contatti</a>
+        <a href="#diary" class="mobile-cta-btn" onclick="closeMobileMenu()">
+            <i class="fas fa-pen-fancy"></i> Scrivi Ora
+        </a>
+    </div>
+
     <!-- Mobile Menu Overlay -->
     <div class="mobile-nav-overlay" onclick="closeMobileMenu()"></div>
 
@@ -1769,36 +1772,48 @@
 
         // Mobile Menu Functions
         function toggleMobileMenu() {
-            console.log('toggleMobileMenu called'); // Debug log
-            const mobileNav = document.querySelector('.mobile-nav');
-            const overlay = document.querySelector('.mobile-nav-overlay');
-            
-            if (mobileNav && overlay) {
-                mobileNav.classList.toggle('active');
-                overlay.classList.toggle('active');
+            try {
+                const mobileNav = document.querySelector('.mobile-nav');
+                const overlay = document.querySelector('.mobile-nav-overlay');
                 
-                // Prevent body scroll when menu is open
-                if (mobileNav.classList.contains('active')) {
-                    document.body.style.overflow = 'hidden';
-                } else {
-                    document.body.style.overflow = '';
+                if (mobileNav && overlay) {
+                    const isActive = mobileNav.classList.contains('active');
+                    
+                    if (isActive) {
+                        // Close menu
+                        mobileNav.classList.remove('active');
+                        overlay.classList.remove('active');
+                        document.body.style.overflow = '';
+                    } else {
+                        // Open menu
+                        mobileNav.classList.add('active');
+                        overlay.classList.add('active');
+                        document.body.style.overflow = 'hidden';
+                    }
                 }
-            } else {
-                console.error('Mobile nav elements not found');
+            } catch (error) {
+                console.error('Error in toggleMobileMenu:', error);
             }
         }
 
         function closeMobileMenu() {
-            console.log('closeMobileMenu called'); // Debug log
-            const mobileNav = document.querySelector('.mobile-nav');
-            const overlay = document.querySelector('.mobile-nav-overlay');
-            
-            if (mobileNav && overlay) {
-                mobileNav.classList.remove('active');
-                overlay.classList.remove('active');
-                document.body.style.overflow = '';
+            try {
+                const mobileNav = document.querySelector('.mobile-nav');
+                const overlay = document.querySelector('.mobile-nav-overlay');
+                
+                if (mobileNav && overlay) {
+                    mobileNav.classList.remove('active');
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            } catch (error) {
+                console.error('Error in closeMobileMenu:', error);
             }
         }
+
+        // Ensure functions are available globally
+        window.toggleMobileMenu = toggleMobileMenu;
+        window.closeMobileMenu = closeMobileMenu;
 
         // Close mobile menu on escape key
         document.addEventListener('keydown', function(e) {
@@ -1807,37 +1822,6 @@
                 if (mobileNav && mobileNav.classList.contains('active')) {
                     closeMobileMenu();
                 }
-            }
-        });
-
-        // Initialize mobile menu when DOM is loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM loaded, initializing mobile menu');
-            
-            // Test if elements exist
-            const mobileBtn = document.querySelector('.mobile-menu-btn');
-            const mobileNav = document.querySelector('.mobile-nav');
-            const overlay = document.querySelector('.mobile-nav-overlay');
-            
-            console.log('Mobile button:', mobileBtn);
-            console.log('Mobile nav:', mobileNav);
-            console.log('Overlay:', overlay);
-            
-            // Add click event listener as fallback
-            if (mobileBtn) {
-                mobileBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    console.log('Mobile button clicked');
-                    toggleMobileMenu();
-                });
-            }
-            
-            // Add overlay click listener
-            if (overlay) {
-                overlay.addEventListener('click', function() {
-                    console.log('Overlay clicked');
-                    closeMobileMenu();
-                });
             }
         });
     </script>
