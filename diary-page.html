@@ -324,9 +324,17 @@
             animation: fadeInUp 1s ease-out 0.2s both;
         }
 
-        .refresh-btn {
-            background: var(--gradient-primary);
-            color: var(--dark-bg);
+        .sync-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .refresh-btn,
+        .export-btn,
+        .import-btn {
             border: none;
             padding: 12px 24px;
             border-radius: 25px;
@@ -334,17 +342,46 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin: 1rem auto;
-            display: block;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .refresh-btn {
+            background: var(--gradient-primary);
+            color: var(--dark-bg);
             box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
         }
 
-        .refresh-btn:hover {
+        .export-btn {
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            color: white;
+        }
+
+        .import-btn {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white;
+        }
+
+        .refresh-btn:hover,
+        .export-btn:hover,
+        .import-btn:hover {
             transform: translateY(-2px);
+        }
+
+        .refresh-btn:hover {
             box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
         }
 
-        .refresh-btn i {
+        .export-btn:hover {
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        .import-btn:hover {
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .refresh-btn i,
+        .export-btn i,
+        .import-btn i {
             margin-right: 0.5rem;
         }
 
@@ -795,6 +832,20 @@
                 padding: 120px 0 40px;
             }
 
+            .sync-controls {
+                flex-direction: column;
+                gap: 0.8rem;
+                align-items: center;
+            }
+
+            .refresh-btn,
+            .export-btn,
+            .import-btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+                min-width: 150px;
+            }
+
             .page-header h1 {
                 font-size: 2.5rem;
             }
@@ -1130,9 +1181,17 @@
         <div class="container">
             <h1><i class="fas fa-book-open"></i> Diario Globale</h1>
             <p>Sfoglia le pagine del nostro diario condiviso. Ogni storia è una voce che conta, ogni emozione ha valore.</p>
-            <button onclick="checkForNewStories()" class="refresh-btn" title="Aggiorna per vedere nuove storie">
-                <i class="fas fa-sync-alt"></i> Aggiorna
-            </button>
+            <div class="sync-controls">
+                <button onclick="checkForNewStories()" class="refresh-btn" title="Aggiorna per vedere nuove storie">
+                    <i class="fas fa-sync-alt"></i> Aggiorna
+                </button>
+                <button onclick="exportStories()" class="export-btn" title="Esporta storie per condividerle">
+                    <i class="fas fa-download"></i> Esporta
+                </button>
+                <button onclick="showImportModal()" class="import-btn" title="Importa storie da altro dispositivo">
+                    <i class="fas fa-upload"></i> Importa
+                </button>
+            </div>
             
             <div class="diary-stats">
                 <div class="stat-item">
@@ -1174,7 +1233,22 @@
                 </button>
             </form>
         </div>
+    </div>
+
+    <!-- Import Modal -->
+    <div id="importModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeImportModal()">&times;</button>
+            <h3><i class="fas fa-upload"></i> Importa Storie da Altro Dispositivo</h3>
+            <p>Incolla qui il codice delle storie esportato dal tuo telefono o altro dispositivo:</p>
+            <div class="modal-form">
+                <textarea id="importData" placeholder="Incolla qui il codice esportato..." rows="8" style="font-family: monospace; font-size: 0.9rem;"></textarea>
+                <button onclick="importStories()" class="import-confirm-btn">
+                    <i class="fas fa-check"></i> Importa Storie
+                </button>
+            </div>
         </div>
+    </div>
 
     <!-- Footer -->
     <footer class="diary-footer">
@@ -1716,9 +1790,127 @@
             }
         }
 
+        // Export stories function
+        function exportStories() {
+            try {
+                const currentStories = loadStoriesFromStorage();
+                const exportData = {
+                    stories: currentStories,
+                    exportDate: new Date().toISOString(),
+                    version: "1.0"
+                };
+                
+                const dataStr = JSON.stringify(exportData, null, 2);
+                const blob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                
+                // Create download link
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `empatheia-storie-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                // Also copy to clipboard for mobile
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(dataStr).then(() => {
+                        showNotification('📋 Storie esportate e copiate negli appunti!', 'success');
+                    }).catch(() => {
+                        showNotification('📁 Storie esportate come file!', 'success');
+                    });
+                } else {
+                    // Fallback for mobile
+                    const textArea = document.createElement('textarea');
+                    textArea.value = dataStr;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    showNotification('📋 Storie esportate e copiate negli appunti!', 'success');
+                }
+                
+            } catch (error) {
+                console.error('Errore durante l\'esportazione:', error);
+                showNotification('❌ Errore durante l\'esportazione', 'error');
+            }
+        }
+
+        // Show import modal
+        function showImportModal() {
+            document.getElementById('importModal').classList.add('show');
+        }
+
+        // Close import modal
+        function closeImportModal() {
+            document.getElementById('importModal').classList.remove('show');
+            document.getElementById('importData').value = '';
+        }
+
+        // Import stories function
+        function importStories() {
+            try {
+                const importDataText = document.getElementById('importData').value.trim();
+                
+                if (!importDataText) {
+                    showNotification('⚠️ Inserisci i dati da importare', 'error');
+                    return;
+                }
+
+                const importData = JSON.parse(importDataText);
+                
+                if (!importData.stories || !Array.isArray(importData.stories)) {
+                    throw new Error('Formato dati non valido');
+                }
+
+                // Get current stories
+                const currentStories = loadStoriesFromStorage();
+                
+                // Filter out duplicates based on ID
+                const existingIds = new Set(currentStories.map(story => story.id));
+                const newStories = importData.stories.filter(story => !existingIds.has(story.id));
+                
+                if (newStories.length === 0) {
+                    showNotification('ℹ️ Nessuna nuova storia da importare', 'info');
+                    closeImportModal();
+                    return;
+                }
+
+                // Merge stories (new ones first)
+                const mergedStories = [...newStories, ...currentStories];
+                
+                // Save merged stories
+                saveStoriesToStorage(mergedStories);
+                
+                // Update global stories variable
+                stories = mergedStories;
+                
+                // Refresh display
+                loadStories();
+                
+                // Close modal and show success
+                closeImportModal();
+                
+                if (newStories.length === 1) {
+                    showNotification('✅ 1 nuova storia importata con successo!', 'success');
+                } else {
+                    showNotification(`✅ ${newStories.length} nuove storie importate con successo!`, 'success');
+                }
+                
+            } catch (error) {
+                console.error('Errore durante l\'importazione:', error);
+                showNotification('❌ Errore: formato dati non valido', 'error');
+            }
+        }
+
         // Ensure functions are available globally
         window.toggleMobileMenu = toggleMobileMenu;
         window.closeMobileMenu = closeMobileMenu;
+        window.exportStories = exportStories;
+        window.showImportModal = showImportModal;
+        window.closeImportModal = closeImportModal;
+        window.importStories = importStories;
 
         // Add keyboard navigation
         document.addEventListener('keydown', function(e) {

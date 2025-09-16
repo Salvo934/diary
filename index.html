@@ -1328,6 +1328,52 @@
             }
         }
 
+        /* Export button in home */
+        .export-btn {
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .export-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        .export-btn i {
+            margin-right: 0.5rem;
+        }
+
+        /* Notification animations */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
+
         /* Scroll animations */
         .fade-in {
             opacity: 0;
@@ -1449,6 +1495,12 @@
                     <button type="submit" class="submit-btn">
                         <i class="fas fa-share"></i> Pubblica nel Diario Globale
                     </button>
+                    
+                    <div class="sync-controls" style="margin-top: 2rem;">
+                        <button onclick="exportStoriesFromHome()" class="export-btn" title="Esporta storie per condividerle">
+                            <i class="fas fa-download"></i> Esporta Storie
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -1813,9 +1865,92 @@
             }
         }
 
+        // Export stories from home page
+        function exportStoriesFromHome() {
+            try {
+                const currentStories = loadStoriesFromStorage();
+                const exportData = {
+                    stories: currentStories,
+                    exportDate: new Date().toISOString(),
+                    version: "1.0"
+                };
+                
+                const dataStr = JSON.stringify(exportData, null, 2);
+                
+                // Copy to clipboard (works better on mobile)
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(dataStr).then(() => {
+                        showNotification('📋 Storie copiate negli appunti! Vai sul computer e usa "Importa" nel diario per incollare.', 'success');
+                    }).catch(() => {
+                        fallbackCopy(dataStr);
+                    });
+                } else {
+                    fallbackCopy(dataStr);
+                }
+                
+            } catch (error) {
+                console.error('Errore durante l\'esportazione:', error);
+                showNotification('❌ Errore durante l\'esportazione', 'error');
+            }
+        }
+
+        function fallbackCopy(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.opacity = '0';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                showNotification('📋 Storie copiate negli appunti! Vai sul computer e usa "Importa" nel diario.', 'success');
+            } catch (err) {
+                console.error('Fallback copy failed:', err);
+                showNotification('⚠️ Non riesco a copiare automaticamente. Usa il pulsante dal diario.', 'error');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                left: 20px;
+                max-width: 400px;
+                margin: 0 auto;
+                background: ${type === 'success' ? 'var(--success-green)' : type === 'error' ? '#ef4444' : 'var(--primary-gold)'};
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 10px;
+                z-index: 3000;
+                animation: slideIn 0.5s ease;
+                text-align: center;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.5s ease';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, 500);
+            }, 4000);
+        }
+
         // Ensure functions are available globally
         window.toggleMobileMenu = toggleMobileMenu;
         window.closeMobileMenu = closeMobileMenu;
+        window.exportStoriesFromHome = exportStoriesFromHome;
 
         // Close mobile menu on escape key
         document.addEventListener('keydown', function(e) {
